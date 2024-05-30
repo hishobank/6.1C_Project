@@ -1,93 +1,77 @@
 pipeline {
     agent any
-    
-    environment {
-        DIRECTORY_PATH = "D:\\AI\\Sem 2\\SIT753\\Ontrack"
-    }
-    
+
     stages {
         stage('Build') {
             steps {
-                echo "Compile the code, and create any artifacts that are required."
+                echo 'Building the project using Maven...'
             }
         }
-        
         stage('Unit and Integration Tests') {
             steps {
-                echo "Run unit tests."
-                echo "Implementation tests."
+                echo 'Running unit and integration tests using JUnit...'
             }
             post {
                 success {
-                    emailext body: 'Unit and Integration Tests stage execution successful!',
-                             subject: 'Unit and Integration Tests stage Success',
-                             to: 'khishoban@gmail.com',
-                             attachLog: true
+                    emailext(
+                        body: 'Unit and Integration Tests stage execution successful!',
+                        subject: 'Unit and Integration Tests stage Success',
+                        to: 'jakanraj007@gmail.com',
+                        attachLog: true
+                    )
                 }
                 failure {
-                    emailext body: 'Unit and Integration Tests stage execution failed!',
-                             subject: 'Unit and Integration Tests stage Failure',
-                             to: 'khishoban@gmail.com',
-                             attachLog: true
+                    emailext(
+                        body: 'Unit and Integration Tests stage execution failed!',
+                        subject: 'Unit and Integration Tests stage Failure',
+                        to: 'jakanraj007@gmail.com',
+                        attachLog: true
+                    )
                 }
             }
         }
-        
         stage('Code Analysis') {
             steps {
-                echo "Check the quality of the code."
+                echo 'Performing code analysis using SonarQube...'
             }
         }
-        
         stage('Security Scan') {
             steps {
-                echo "Performing a security scan on the code"
+                echo 'Performing security scan using OWASP Dependency Check...'
             }
             post {
                 success {
-                    emailext body: 'Security Scan stage execution successful!',
-                             subject: 'Security Scan stage Success',
-                             to: 'khishoban@gmail.com',
-                             attachLog: true
+                    emailext(
+                        body: 'Security Scan stage execution successful!',
+                        subject: 'Security Scan stage Success',
+                        to: 'jakanraj007@gmail.com',
+                        attachLog: true
+                    )
                 }
                 failure {
-                    emailext body: 'Security Scan stage execution failed!',
-                             subject: 'Security Scan stage Failure',
-                             to: 'khishoban@gmail.com',
-                             attachLog: true
+                    emailext(
+                        body: 'Security Scan stage execution failed!',
+                        subject: 'Security Scan stage Failure',
+                        to: 'jakanraj007@gmail.com',
+                        attachLog: true
+                    )
                 }
             }
         }
-        
         stage('Deploy to Staging') {
             steps {
-                echo "Deploying the application to a staging server"
+                echo 'Deploying to staging server using Docker Compose...'
             }
         }
-        
         stage('Integration Tests on Staging') {
             steps {
-                echo "Run integration tests"
+                echo 'Running integration tests on the staging environment...'
             }
         }
-        
         stage('Deploy to Production') {
             steps {
-                echo "Deploy the code to the production environment"
+                echo 'Deploying to production server using Octopus Deploy...'
             }
-        }
-    }
-    
-    post {
-        success {
-            echo "Pipeline execution successful!"
-        }
-        failure {
-            echo "Pipeline execution failed!"
-            emailext body: 'Pipeline execution failed. Please check the logs for details.',
-                     subject: 'Pipeline Failure',
-                     to: 'khishoban@email.com',
-                     attachLog: true
         }
     }
 }
